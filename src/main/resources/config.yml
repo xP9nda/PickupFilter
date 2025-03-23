@@ -1,0 +1,608 @@
+# ---------------- [ PICKUPFILTER CONFIG ] ----------------
+# A plugin by xP9nda
+# https://github.com/xP9nda
+# https://modrinth.com/user/xP9nda
+# ---------------------------------------------------------
+
+# ---------------- [ MAIN SETTINGS ] ----------------
+settings:
+  # settings.profileNameLengthMin | int
+  # the minimum length of a profile name
+  # default: 1
+  profileNameLengthMin: 1
+
+  # settings.profileNameLengthMax | int
+  # the maximum length of a profile name
+  # default: 16
+  profileNameLengthMax: 16
+
+  # settings.allowedProfileNameCharacters | string
+  # the allowed characters for profile names (default is alphanumeric)
+  # when a user attempts to make a profile, if any characters are not in this string, the creation will be denied and they will be shown messages.newProfileInvalidName
+  # default: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+  allowedProfileNameCharacters: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+  # settings.maxAllowedProfiles | int
+  # the maximum number of profiles a player can have
+  # -------- INFO ABOUT MAX PROFILES:
+  # the maximum number of profiles per user is permission based, so only up to this number will be checked when creating a new profile
+  #
+  # if this value is 5, then players can have up to `pickupfilter.profile.create.max.5`
+  # if a player has `pickupfilter.profile.create.max.6`, it will still only let them create 5, as it's all driven by the maxAllowedProfiles value
+  # no user, even operators, will be able to create more than this number of max allowed profiles
+  # --------
+  # default: 5
+  maxAllowedProfiles: 5
+
+# ---------------- [ MESSAGE SETTINGS ] ----------------
+messages:
+
+  # messages.reloadConfig | string
+  # the message sent to the user when the plugins config is reloaded
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Config reloaded."
+  reloadConfig: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Config reloaded."
+
+  # messages.newProfileInvalidName | string
+  # the message sent to the user who attempts to create a new profile with an invalid profile name
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Profiles names must be alphanumeric and between 1-16 characters."
+  newProfileInvalidName: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Profiles names must be alphanumeric and between 1-16 characters."
+
+  # messages.newProfileNameExists | string
+  # the message sent to the user who attempts to create a new profile with a name that already exists
+  # placeholders:
+  # - <profile_name>: the name of the profile that already exists
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] A profile with the name <#B9C0EA><profile_name><#FFFFFF> already exists."
+  newProfileNameExists: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] A profile with the name <#B9C0EA><profile_name><#FFFFFF> already exists."
+
+  # messages.newProfileCreatedSuccess | string
+  # the message sent to the user who successfully creates a new profile
+  # placeholders:
+  # - <profile_name>: the name of the profile that was created
+  # default: ""
+  newProfileCreatedSuccess: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Successfully created profile <#B9C0EA><profile_name><#FFFFFF>."
+
+  # maxProfilesReached | string
+  # the message sent to the user who attempts to create a new profile, but they have reached their maximum amount of allowed profiles
+  # placeholders:
+  # - <max_allowed_profiles>: the maximum number of profiles that the player is allowed to have
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] You have reached the maximum number of allowed profiles. (Your limit is <#B9C0EA><max_allowed_profiles><#FFFFFF>)."
+  maxProfilesReached: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] You have reached the maximum number of allowed profiles. (Your limit is <#B9C0EA><max_allowed_profiles><#FFFFFF>)."
+
+  # messages.generalProfileNameInvalid | string
+  # the message sent to the user who attempts to use a profile (via any command that modifies profiles) that does not exist
+  # placeholders:
+  # - <profile_name>: the name of the profile that does not exist
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Profile <#B9C0EA><profile_name><#FFFFFF> does not exist."
+  generalProfileNameInvalid: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Profile <#B9C0EA><profile_name><#FFFFFF> does not exist."
+
+  # messages.profileInvalidMaterial | string
+  # the message sent to the user who attempts to add a non valid item to their profile filter
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] You provided an invalid item type."
+  profileInvalidMaterial: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] You provided an invalid item type."
+
+  # messages.profileNoHeldItem | string
+  # the message sent to the user who attempts to add/remove a held item to/from their profile filter, but they are not holding an item
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] You must hold an item, or provide one in the command."
+  profileNoHeldItem: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] You must hold an item, or provide one in the command."
+
+  # messages.profileItemAlreadyInFilter | string
+  # the message sent to the user who attempts to add an item to their profile filter that is already in the filter
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] That item is already in your filter."
+  profileItemAlreadyInFilter: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] That item is already in your filter."
+
+  # messages.profileItemAddedToFilter | string
+  # the message sent to the user who successfully adds an item to their profile filter
+  # placeholders:
+  # - <item_name>: the name of the item that was added to the filter
+  # - <profile_name>: the name of the profile that the item was added to
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Added <#B9C0EA><item_name><#FFFFFF> to profile <#B9C0EA><profile_name><#FFFFFF>."
+  profileItemAddedToFilter: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Added <#B9C0EA><item_name><#FFFFFF> to profile <#B9C0EA><profile_name><#FFFFFF>."
+
+  # messages.profileItemRemovedFromFilter | string
+  # the message sent to the user who successfully removes an item from their profile filter
+  # placeholders:
+  # - <item_name>: the name of the item that was removed from the filter
+  # - <profile_name>: the name of the profile that the item was removed from
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Removed <#B9C0EA><item_name><#FFFFFF> from profile <#B9C0EA><profile_name><#FFFFFF>."
+  profileItemRemovedFromFilter: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Removed <#B9C0EA><item_name><#FFFFFF> from profile <#B9C0EA><profile_name><#FFFFFF>."
+
+  # messages.profileItemNotInFilter | string
+  # the message sent to the user who attempts to remove an item from their profile filter that is not in the filter
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] You can only remove items that are in your filter."
+  profileItemNotInFilter: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] You can only remove items that are in your filter."
+
+  # messages.profileStateChanged | string
+  # the message sent to the user when a profiles mode is changed (whitelist/blacklist)
+  # placeholders:
+  # - <profile_name>: the name of the profile that had its mode changed
+  # - <profile_state>: the new mode of the profile (whitelist/blacklist)
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Profile <#B9C0EA><profile_name><#FFFFFF> mode changed to <#B9C0EA><profile_state><#FFFFFF>."
+  profileStateChanged: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Profile <#B9C0EA><profile_name><#FFFFFF> mode changed to <#B9C0EA><profile_state><#FFFFFF>."
+
+  # messages.itemFilterToggled | string
+  # the message sent to the user when they toggle whether their itemfilter is turned on or off
+  # placeholders:
+  # - <new_enabled_state>: the new state of the itemfilter ("enabled"/"disabled")
+  # - <new_enabled_state_bool>: the new state of the itemfilter ("true"/"false")
+  # - <old_enabled_state>: the old state of the itemfilter ("enabled"/"disabled")
+  # - <old_enabled_state_bool>: the old state of the itemfilter ("true"/"false")
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Item filter is now <#B9C0EA><new_enabled_state><#FFFFFF>."
+  itemFilterToggled: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Item filter is now <#B9C0EA><new_enabled_state><#FFFFFF>."
+
+  # messages.profileUse | string
+  # the message sent to the user when they use/activate a profile
+  # placeholders:
+  # - <profile_name>: the name of the profile that was used
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Now using profile <#B9C0EA><profile_name><#FFFFFF>."
+  profileUse: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Now using profile <#B9C0EA><profile_name><#FFFFFF>."
+
+  # messages.noActiveProfile | string
+  # the message sent to the user when they attempt to use a filter command (that modifies the active profile), but they have no active profile
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] You do not have an active profile. Use <#B9C0EA>/itemfilter profile use <profile_name><#FFFFFF> to set your active profile."
+  noActiveProfile: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] You do not have an active profile. Use <#B9C0EA>/itemfilter profile use <profile_name><#FFFFFF> to set your active profile."
+
+  # messages.profileRenamedSuccess | string
+  # the message sent to the user who successfully renames a profile
+  # placeholders:
+  # - <old_profile_name>: the old name of the profile
+  # - <new_profile_name>: the new name of the profile
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Successfully renamed profile <#B9C0EA><old_profile_name><#FFFFFF> to <#B9C0EA><new_profile_name><#FFFFFF>."
+  profileRenamedSuccess: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Successfully renamed profile <#B9C0EA><old_profile_name><#FFFFFF> to <#B9C0EA><new_profile_name><#FFFFFF>."
+
+  # messages.profileDeletedSuccess | string
+  # the message sent to the user who successfully deletes a profile
+  # placeholders:
+  # - <profile_name>: the name of the profile that was deleted
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Successfully deleted profile <#B9C0EA><profile_name><#FFFFFF>."
+  profileDeletedSuccess: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Successfully deleted profile <#B9C0EA><profile_name><#FFFFFF>."
+
+  # messages.noLongerHaveActiveProfile | string
+  # the message sent to the user when they no longer have an active profile (this will occur when the player deletes the profile that they had active)
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] You no longer have an active profile."
+  noLongerHaveActiveProfile: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] You no longer have an active profile."
+
+  # messages.profileDeleteConfirmation | string
+  # the message sent to the user who tries to delete a profile that they currently have active without passing the confirmation argument
+  # (user is required to pass "confirm" at the end of the command to delete an active profile)
+  # placeholders:
+  # - <profile_name>: the name of the profile that the user is trying to delete
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Profile <#B9C0EA><profile_name><#FFFFFF> is currently active, you can delete it by running <#B9C0EA>/itemfilter profile delete <profile_name> confirm<#FFFFFF>."
+  profileDeleteConfirmation: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Profile <#B9C0EA><profile_name><#FFFFFF> is currently active, you can delete it by running <#B9C0EA>/itemfilter profile delete <profile_name> confirm<#FFFFFF>."
+
+  # messages.filterModeSet | string
+  # the message sent to the user when they set the filter mode of a profile
+  # placeholders:
+  # - <profile_name>: the name of the profile that had its filter mode set
+  # - <filter_mode>: the new filter mode of the profile
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Filter mode for profile <#B9C0EA><profile_name><#FFFFFF> set to <#B9C0EA><filter_mode><#FFFFFF>."
+  filterModeSet: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Filter mode for profile <#B9C0EA><profile_name><#FFFFFF> set to <#B9C0EA><filter_mode><#FFFFFF>."
+
+  # messages.dataDeletePlayerDoesNotExist | string
+  # the message sent to the user who attempts to delete a players data, but the given player does not exist
+  # placeholders:
+  # - <player_name>: the name of the player whose data was attempted to be deleted
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Player <#B9C0EA><player_name><#FFFFFF> does not exist."
+  dataDeletePlayerDoesNotExist: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Player <#B9C0EA><player_name><#FFFFFF> does not exist."
+
+  # messages.dataDeletePlayerHasNoData | string
+  # the message sent to the user who attempts to delete a players data, but the given player does not have any data to delete
+  # placeholders:
+  # - <player_name>: the name of the player whose data was attempted to be deleted
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] <#B9C0EA><player_name><#FFFFFF> has no data to delete."
+  dataDeletePlayerHasNoData: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] <#B9C0EA><player_name><#FFFFFF> has no data to delete."
+
+  # messages.dataDeletePlayerIsOnline | string
+  # the message sent to the user who attempts to delete a players data, but the given player is online so data could not be deleted
+  # placeholders:
+  # - <player_name>: the name of the player whose data was attempted to be deleted
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Player <#B9C0EA><player_name><#FFFFFF> is online, data could not be deleted."
+  dataDeletePlayerIsOnline: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Player <#B9C0EA><player_name><#FFFFFF> is online, data could not be deleted."
+
+  # messages.dataDeleteSuccess | string
+  # the message sent to the user who deletes a players pickup data successfully
+  # placeholders:
+  # - <player_name>: the name of the player whose data was deleted
+  # - <player_uuid>: the UUID of the player whose data was deleted
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Successfully deleted data for <#B9C0EA><player_name><#FFFFFF> (<#B9C0EA><player_uuid><#FFFFFF>)."
+  dataDeleteSuccess: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Successfully deleted data for <#B9C0EA><player_name><#FFFFFF> (<#B9C0EA><player_uuid><#FFFFFF>)."
+
+  # messages.dataDeleteFail | string
+  # the message sent to the user who deletes a players pickup data and an error occurs
+  # placeholders:
+  # - <player_name>: the name provided as part of the delete command
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] An error occurred while attempting to delete data for <#B9C0EA><player_name><#FFFFFF>. Check the console for more information."
+  dataDeleteFail: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] An error occurred while attempting to delete data for <#B9C0EA><player_name><#FFFFFF>. Check the console for more information."
+
+# ---------------- [ EDIT MENU SETTINGS ] ----------------
+# editMenu
+# the menu that will be shown whenever a player uses the /itemfilter edit command
+# the menu will show the players current filter and allow them to remove items from it via clicks
+# there are buttons along the bottom row that you can customise below
+editMenu:
+
+  # editMenu.title | string
+  # the title of the edit menu
+  # placeholders:
+  # - <profile_name>: the name of the profile that the edit menu is for
+  # default: "Editing Profile '<profile_name>'"
+  title: "Editing Profile '<profile_name>'"
+
+  # editMenu.removeFromProfileItemLore | list
+  # the lore of each item will in the edit menu will be this
+  # placeholders:
+  # - <profile_name>: the name of the profile that the edit menu is for
+  # default:
+  #  - " "
+  #  - "<#FFFFFF><b>Left Click</b> to remove this item from your filter."
+  #  - " "
+  removeFromProfileItemLore:
+    - " "
+    - "<#FFFFFF><b>Left Click</b> to remove this item from your filter."
+    - " "
+
+  # editMenu.bottomRow
+  # the settings for the filler items in the bottom row of the edit menu
+  bottomRow:
+    # editMenu.bottomRow.material | string
+    # the material of the filler items in the bottom row
+    # default: BLACK_STAINED_GLASS_PANE
+    material: BLACK_STAINED_GLASS_PANE
+
+    # editMenu.bottomRow.customModelData | int
+    # custom model data of the filler items in the bottom row
+    # leave as 0 to use the material, if this is not 0, the material will be ignored
+    customModelData: 0
+
+  # editMenu.closeButton
+  # the settings for the close button in the edit menu (positioned at the bottom centre of the inventory)
+  closeButton:
+    # editMenu.closeButton.enabled | boolean
+    # whether the close button is enabled
+    # default: true
+    enabled: true
+
+    # editMenu.closeButton.title | string
+    # the title of the close button
+    # default: "<#FFFFFF>Close"
+    title: "<#FFFFFF>Close"
+
+    # editMenu.closeButton.material
+    # the material of the close button
+    # default: BARRIER
+    material: BARRIER
+
+    # editMenu.closeButton.customModelData
+    # custom model data of the close button
+    # leave as 0 to use the material
+    customModelData: 0
+
+    # editMenu.closeButton.lore | list
+    # the lore of the close button
+    # placeholders:
+    # - <profile_name>: the name of the profile that the edit menu is for
+    # default:
+    # - " "
+    # - "<#FFFFFF><b>Left Click</b> to close the menu."
+    # - " "
+    lore:
+      - " "
+      - "<#FFFFFF><b>Left Click</b> to close the menu."
+      - " "
+
+  # editMenu.previousPageButton
+  # the settings for the previous page button in the edit menu (positioned to the left of the close button)
+  previousPageButton:
+    # editMenu.previousPageButton.title | string
+    # the title of the close button
+    # default: "<#FFFFFF>Close"
+    title: "<#FFFFFF>Previous Page"
+
+    # editMenu.previousPageButton.hideOnFirstPage | boolean
+    # whether the previous page button should be hidden when the user is on the first page
+    # default: true
+    hideOnFirstPage: true
+
+    # editMenu.previousPageButton.material
+    # the material of the previous page button
+    # default: PAPER
+    material: PAPER
+
+    # editMenu.previousPageButton.customModelData
+    # custom model data of the close button
+    # leave as 0 to use the material
+    customModelData: 0
+
+    # editMenu.previousPageButton.lore | list
+    # the lore of the close button
+    # placeholders:
+    # - <profile_name>: the name of the profile that the edit menu is for
+    # default:
+    # - " "
+    # - "<#FFFFFF>Go to the <#B9C0EA>previous<#FFFFFF> page."
+    # - " "
+    lore:
+      - " "
+      - "<#FFFFFF>Go to the <#B9C0EA>previous<#FFFFFF> page."
+      - " "
+
+  # editMenu.nextPageButton
+  # the settings for the previous page button in the edit menu (positioned to the right of the close button)
+  nextPageButton:
+      # editMenu.nextPageButton.title | string
+      # the title of the close button
+      # default: "<#FFFFFF>Close"
+      title: "<#FFFFFF>Next Page"
+
+      # editMenu.nextPageButton.hideOnLastPage | boolean
+      # whether the next page button should be hidden when the user is on the last page
+      # default: true
+      hideOnLastPage: true
+
+      # editMenu.nextPageButton.material
+      # the material of the next page button
+      # default: PAPER
+      material: PAPER
+
+      # editMenu.nextPageButton.customModelData
+      # custom model data of the close button
+      # leave as 0 to use the material
+      customModelData: 0
+
+      # editMenu.nextPageButton.lore | list
+      # the lore of the close button
+      # placeholders:
+      # - <profile_name>: the name of the profile that the edit menu is for
+      # default:
+      # - " "
+      # - "<#FFFFFF>Go to the <#B9C0EA>next<#FFFFFF> page."
+      # - " "
+      lore:
+        - " "
+        - "<#FFFFFF>Go to the <#B9C0EA>next<#FFFFFF> page."
+        - " "
+
+  # editMenu.filterModeButton
+  # the settings for the filter mode button in the edit menu (positioned 3 to the left of the close button)
+  filterModeButton:
+    # editMenu.filterModeButton.title | string
+    # the title of the filter mode button
+    # default: "<#FFFFFF>Filter Mode"
+    title: "<#FFFFFF>Toggle Filter Mode"
+
+    # editMenu.filterModeButton.enabled | boolean
+    # whether the filter mode button is enabled
+    # default: true
+    enabled: true
+
+    # editMenu.filterModeButton.material
+    # the material of the filter mode button
+    # default: BOOK
+    material: BOOK
+
+    # editMenu.filterModeButton.customModelData
+    # custom model data of the close button
+    # leave as 0 to use the material
+    customModelData: 0
+
+    # editMenu.filterModeButton.lore | list
+    # the lore of the filter mode button
+    # placeholders:
+    # - <profile_name>: the name of the profile that the edit menu is for
+    # - <filter_mode>: the current filter mode of the profile
+    # - <filter_mode_opposite>: the opposite filter mode of the profile
+    # default:
+    # - " "
+    # - "<#FFFFFF>Click to toggle the filter mode."
+    # - "<#FFFFFF>Current Mode: <#B9C0EA><filter_mode>"
+    # - " "
+    lore:
+      - " "
+      - "<#FFFFFF>Click to toggle the filter mode."
+      - "<#FFFFFF>Current Mode: <#B9C0EA><filter_mode>"
+      - " "
+
+  # editMenu.filterEnabledButton
+  # the settings for the enabling/disabling the filter button (positioned 3 to the right of the close button)
+  filterEnabledButton:
+    # editMenu.filterEnabledButton.title | string
+    # the title of the set active profile button
+    # default: "<#FFFFFF>Toggle Filter Enabled"
+    title: "<#FFFFFF>Toggle Filter Enabled"
+
+    # editMenu.filterEnabledButton.enabled | boolean
+    # whether the filter enabled button is enabled
+    # default: true
+    enabled: true
+
+    # editMenu.filterEnabledButton.material
+    # the material of the filter enabled button
+    # default: DIAMOND
+    material: DIAMOND
+
+    # editMenu.filterEnabledButton.customModelData
+    # custom model data of the filter enabled button
+    # leave as 0 to use the material
+    customModelData: 0
+
+    # editMenu.filterEnabledButton.lore | list
+    # the lore of the set active profile button
+    # placeholders:
+    # - <filter_enabled_oo>: the current state of the filter ("on"/"off")
+    # - <filter_enabled_ed>: the current state of the filter ("enabled"/"disabled")
+    # default:
+    # - " "
+    # - "<#FFFFFF>Click to toggle the filter enabled state."
+    # - "<#FFFFFF>Currently your filter is turned <#B9C0EA><filter_enabled_oo><#FFFFFF>."
+    # - " "
+    lore:
+      - " "
+      - "<#FFFFFF>Click to toggle the filter enabled state."
+      - "<#FFFFFF>Currently your filter is turned <#B9C0EA><filter_enabled_oo><#FFFFFF>."
+      - " "
+
+
+# ---------------- [ PROFILE MENU SETTINGS ] ----------------
+# profileMenu
+# the menu that will be shown whenever a player uses the /itemfilter command
+# the menu will show players all of their profiles and allow them to enter the edit menu for a profile via a click
+# there are buttons along the bottom row that you can customise below
+profileMenu:
+
+  # profileMenu.title | string
+  # the title of the edit menu
+  # default: "Your Profiles"
+  title: "Your Profiles"
+
+  # editMenu.editProfileItemTitle | string
+  # the title of each profile in the menu
+  # placeholders:
+  # - <profile_name>: the name of the profile that the edit menu is for
+  # default: "<#FFFFFF><profile_name>"
+  editProfileItemTitle: "<#FFFFFF><profile_name>"
+
+  # editMenu.editProfileItemTitleActive | string
+  # the title of the active profile in the menu
+  # placeholders:
+  # - <profile_name>: the name of the profile that the edit menu is for
+  # default: "<#FFFFFF><profile_name>"
+  editProfileItemTitleActive: "<#FFFFFF><profile_name> (Active)"
+
+  # editMenu.editProfileItemMaterial | string
+  # the material of each profile item in the menu
+  # default: BARREL
+  editProfileItemMaterial: BARREL
+
+  # editMenu.editProfileItemLore | list
+  # the lore of each profile in the menu will be this
+  # placeholders:
+  # - <profile_name>: the name of the profile that the edit menu is for
+  # default:
+  #  - " "
+  #  - "<#FFFFFF><b>Left Click</b> to edit profile."
+  # - "<#FFFFFF><b>Right Click</b> to set as active profile."
+  #  - " "
+  editProfileItemLore:
+    - " "
+    - "<#FFFFFF><b>Left Click</b> to edit profile."
+    - "<#FFFFFF><b>Right Click</b> to set as active profile."
+    - " "
+
+  # editMenu.shouldActiveProfileShowEnchanted | boolean
+  # whether the active profile should show as enchanted in the profile menu
+  # default: true
+  shouldActiveProfileShowEnchanted: true
+
+  # editMenu.bottomRow
+  # the settings for the filler items in the bottom row of the edit menu
+  bottomRow:
+    # editMenu.bottomRow.material | string
+    # the material of the filler items in the bottom row
+    # default: BLACK_STAINED_GLASS_PANE
+    material: BLACK_STAINED_GLASS_PANE
+
+    # editMenu.bottomRow.customModelData | int
+    # custom model data of the filler items in the bottom row
+    # leave as 0 to use the material, if this is not 0, the material will be ignored
+    customModelData: 0
+
+  # editMenu.closeButton
+  # the settings for the close button in the edit menu (positioned at the bottom centre of the inventory)
+  closeButton:
+    # editMenu.closeButton.enabled | boolean
+    # whether the close button is enabled
+    # default: true
+    enabled: true
+
+    # editMenu.closeButton.title | string
+    # the title of the close button
+    # default: "<#FFFFFF>Close"
+    title: "<#FFFFFF>Close"
+
+    # editMenu.closeButton.material
+    # the material of the close button
+    # default: BARRIER
+    material: BARRIER
+
+    # editMenu.closeButton.customModelData
+    # custom model data of the close button
+    # leave as 0 to use the material
+    customModelData: 0
+
+    # editMenu.closeButton.lore | list
+    # the lore of the close button
+    # default:
+    # - " "
+    # - "<#FFFFFF><b>Left Click</b> to close the menu."
+    # - " "
+    lore:
+      - " "
+      - "<#FFFFFF><b>Left Click</b> to close the menu."
+      - " "
+
+  # editMenu.previousPageButton
+  # the settings for the previous page button in the edit menu (positioned to the left of the close button)
+  previousPageButton:
+    # editMenu.previousPageButton.title | string
+    # the title of the close button
+    # default: "<#FFFFFF>Close"
+    title: "<#FFFFFF>Previous Page"
+
+    # editMenu.previousPageButton.hideOnFirstPage | boolean
+    # whether the previous page button should be hidden when the user is on the first page
+    # default: true
+    hideOnFirstPage: true
+
+    # editMenu.previousPageButton.material
+    # the material of the previous page button
+    # default: PAPER
+    material: PAPER
+
+    # editMenu.previousPageButton.customModelData
+    # custom model data of the close button
+    # leave as 0 to use the material
+    customModelData: 0
+
+    # editMenu.previousPageButton.lore | list
+    # the lore of the close button
+    # default:
+    # - " "
+    # - "<#FFFFFF>Go to the <#B9C0EA>previous<#FFFFFF> page."
+    # - " "
+    lore:
+      - " "
+      - "<#FFFFFF>Go to the <#B9C0EA>previous<#FFFFFF> page."
+      - " "
+
+  # editMenu.nextPageButton
+  # the settings for the previous page button in the edit menu (positioned to the right of the close button)
+  nextPageButton:
+    # editMenu.nextPageButton.title | string
+    # the title of the close button
+    # default: "<#FFFFFF>Close"
+    title: "<#FFFFFF>Next Page"
+
+    # editMenu.nextPageButton.hideOnLastPage | boolean
+    # whether the next page button should be hidden when the user is on the last page
+    # default: true
+    hideOnLastPage: true
+
+    # editMenu.nextPageButton.material
+    # the material of the next page button
+    # default: PAPER
+    material: PAPER
+
+    # editMenu.nextPageButton.customModelData
+    # custom model data of the close button
+    # leave as 0 to use the material
+    customModelData: 0
+
+    # editMenu.nextPageButton.lore | list
+    # the lore of the close button
+    # default:
+    # - " "
+    # - "<#FFFFFF>Go to the <#B9C0EA>next<#FFFFFF> page."
+    # - " "
+    lore:
+      - " "
+      - "<#FFFFFF>Go to the <#B9C0EA>next<#FFFFFF> page."
+      - " "

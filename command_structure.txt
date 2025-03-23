@@ -1,0 +1,31 @@
+Command Aliases
+/itemfilter
+/if
+/pickupfilter
+/pf
+
+--------
+
+Base Command
+/itemfilter info	                                    Shows general info about the plugin. [no permission]
+/itemfilter help	                                    Displays help and usage instructions. [no permission]
+/itemfilter toggle                                      Toggles the entire item filter on and off for the user. [pickupfilter.toggle]
+/itemfilter                                             Opens a GUI for viewing all profiles, which can be clicked to edit them. [pickupfilter.profiles]
+
+Profile Management
+/itemfilter profile create <name>                       Creates a new pickup profile. [pickupfilter.profile.create] [pickupfilter.profile.create.max.<i> (max profiles up to config settings.maxAllowedProfiles)]
+/itemfilter profile delete <profile> [confirmation]     Deletes a pickup profile. (if it's the active one, requires "confirm" to be passed) [pickupfilter.profile.delete]
+/itemfilter profile use <profile>	                    Activates the given profile. [pickupfilter.profile.use]
+/itemfilter profile edit <profile>             	        Opens a GUI for modifying a profile.
+/itemfilter profile rename <profile> <name>	            Renames a profile. [pickupfilter.profile.rename]
+/itemfilter profile mode <profile> <mode>            	Sets the mode of the profile to whitelist or blacklist. [pickupfilter.profile.mode]
+
+Quick Active Profile Management
+/itemfilter add [item]	                                Adds the held item (if no item is provided) or provided item to the active profile. [pickupfilter.add]
+/itemfilter remove [item]	                            Removes the held item (if no item is provided) or provided item from the active profile. [pickupfilter.remove]
+/itemfilter edit                     	                Opens a GUI for modifying the active profile. [pickupfilter.edit]
+/itemfilter mode <mode>	                                Sets the current profile to whitelist or blacklist mode. [pickupfilter.mode]
+
+Admin Commands
+/itemfilter admin reload	                            Reloads the plugin config. [pickupfilter.admin.reload]
+/itemfilter admin delete <player>	                    Deletes all saved pickup & profile data for an offline player. [pickupfilter.admin.delete] player & console runnable

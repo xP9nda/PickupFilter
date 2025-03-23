@@ -1,0 +1,10 @@
+name: PickupFilter
+version: '1.0.0'
+main: xp9nda.pickupFilter.PickupFilter
+api-version: '1.21'
+authors: [ xP9nda ]
+description: An extensive item filter pickup solution featuring customisable profiles and GUIs.
+website: https://github.com/xP9nda
+
+softdepend:
+  - EcoEnchants
