@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -25,7 +26,6 @@ public class PickupHandler implements Listener {
     public PickupHandler(PickupFilter plugin) {
         this.plugin = plugin;
         this.dataHolder = plugin.getDataHolder();
-
 
         // check if EcoEnchants is enabled
         if (Bukkit.getPluginManager().isPluginEnabled("EcoEnchants")) {
@@ -71,7 +71,7 @@ public class PickupHandler implements Listener {
     }
 
     // listen to item pickup events
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onItemPickup(EntityPickupItemEvent event) {
         // check if the entity is a player
         if (!(event.getEntity() instanceof Player)) {
