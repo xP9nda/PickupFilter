@@ -1,7 +1,6 @@
 package xp9nda.pickupFilter.handlers.implementations;
 
 import com.willfp.eco.core.events.DropQueuePushEvent;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,6 +26,8 @@ public class EcoEnchantsImplementation implements Listener {
             Player player = event.getPlayer();
             Collection<? extends ItemStack> items = event.getItems();
 
+            int xpToGive = event.getXp();
+
             for (ItemStack item : items) {
                 boolean isPickupAllowed = plugin.getPickupHandler().shouldItemBePickedUp(player, item);
 
@@ -35,6 +36,11 @@ public class EcoEnchantsImplementation implements Listener {
                     event.setCancelled(true);
                     plugin.getPickupHandler().handleDroppingItem(event.getLocation(), item);
                 }
+            }
+
+            // give the player the xp, allowing mending to absorb it
+            if (xpToGive > 0) {
+                player.giveExp(xpToGive, true);
             }
         }
     }
