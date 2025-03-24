@@ -37,7 +37,7 @@ public final class PickupFilter extends JavaPlugin {
     private ConfigHandler configHandler;
 
     private InfoHandler infoHandler;
-    private HelpHandler helpHandler;
+//    private HelpHandler helpHandler;
 
     private AdminDeleteHandler adminDeleteHandler;
     private PlayerJoinHandler playerJoinHandler;
@@ -52,6 +52,9 @@ public final class PickupFilter extends JavaPlugin {
     private ItemFilterEditListener itemFilterEditListener;
     private PickupHandler pickupHandler;
     private EcoEnchantsImplementation ecoEnchantsImplementation;
+
+    private ProfileCreationButtonChatHandler profileCreationButtonChatHandler;
+    private ProfileCreateHandler profileCreateHandler;
 
     @Override
     public void onEnable() {
@@ -76,7 +79,7 @@ public final class PickupFilter extends JavaPlugin {
         AdminConfigReloadHandler adminConfigReloadHandler = new AdminConfigReloadHandler(this);
 
         infoHandler = new InfoHandler(this);
-        helpHandler = new HelpHandler(this);
+//        helpHandler = new HelpHandler(this);
         ToggleHandler toggleHandler = new ToggleHandler(this);
 
         adminDeleteHandler = new AdminDeleteHandler(this);
@@ -86,7 +89,7 @@ public final class PickupFilter extends JavaPlugin {
         FilterEditHandler filterEditHandler = new FilterEditHandler(this);
         FilterModeHandler filterModeHandler = new FilterModeHandler(this);
 
-        ProfileCreateHandler profileCreateHandler = new ProfileCreateHandler(this);
+        profileCreateHandler = new ProfileCreateHandler(this);
         ProfileDeleteHandler profileDeleteHandler = new ProfileDeleteHandler(this);
         ProfileModeHandler profileModeHandler = new ProfileModeHandler(this);
         ProfileRenameHandler profileRenameHandler = new ProfileRenameHandler(this);
@@ -94,6 +97,9 @@ public final class PickupFilter extends JavaPlugin {
 
         playerJoinHandler = new PlayerJoinHandler(this);
         pluginManager.registerEvents(playerJoinHandler, this);
+
+        profileCreationButtonChatHandler = new ProfileCreationButtonChatHandler(this);
+        pluginManager.registerEvents(profileCreationButtonChatHandler, this);
 
         pickupHandler = new PickupHandler(this);
         pluginManager.registerEvents(pickupHandler, this);
@@ -127,7 +133,7 @@ public final class PickupFilter extends JavaPlugin {
             annotationParser.parse(adminDeleteHandler);
 
             annotationParser.parse(infoHandler);
-            annotationParser.parse(helpHandler);
+//            annotationParser.parse(helpHandler);
             annotationParser.parse(toggleHandler);
             annotationParser.parse(profileMenuHandler);
 
@@ -178,9 +184,9 @@ public final class PickupFilter extends JavaPlugin {
         return dataHolder;
     }
 
-    public HelpHandler getHelpHandler() {
-        return helpHandler;
-    }
+//    public HelpHandler getHelpHandler() {
+//        return helpHandler;
+//    }
 
     public InventoryManager getInventoryManager() {
         return inventoryManager;
@@ -196,5 +202,13 @@ public final class PickupFilter extends JavaPlugin {
 
     public ItemFilterEditListener getItemFilterEditListener() {
         return itemFilterEditListener;
+    }
+
+    public ProfileCreationButtonChatHandler getProfileCreationButtonChatHandler() {
+        return profileCreationButtonChatHandler;
+    }
+
+    public ProfileCreateHandler getProfileCreateHandler() {
+        return profileCreateHandler;
     }
 }

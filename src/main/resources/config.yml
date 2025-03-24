@@ -54,6 +54,13 @@ messages:
   # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] A profile with the name <#B9C0EA><profile_name><#FFFFFF> already exists."
   newProfileNameExists: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] A profile with the name <#B9C0EA><profile_name><#FFFFFF> already exists."
 
+  # messages.newProfileEnterNameInChat | string
+  # the message sent to the user when they are prompted to enter a name for a new profile in the chat
+  # this will happen when users use the create new profile button in the profiles menu
+  # users will be prompted and then their inputs will continually be monitored until they enter a valid name
+  # default: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Enter a name for your new profile in chat:"
+  newProfileEnterNameInChat: "<#FFFFFF>[<#B9C0EA>PickupFilter<#FFFFFF>] Enter a name for your new profile in chat:"
+
   # messages.newProfileCreatedSuccess | string
   # the message sent to the user who successfully creates a new profile
   # placeholders:
@@ -243,7 +250,7 @@ editMenu:
   # editMenu.bottomRow
   # the settings for the filler items in the bottom row of the edit menu
   bottomRow:
-    # editMenu.bottomRow.material | string
+    # editMenu.bottomRow.material | material | string
     # the material of the filler items in the bottom row
     # default: BLACK_STAINED_GLASS_PANE
     material: BLACK_STAINED_GLASS_PANE
@@ -252,6 +259,45 @@ editMenu:
     # custom model data of the filler items in the bottom row
     # leave as 0 to use the material, if this is not 0, the material will be ignored
     customModelData: 0
+
+  # editMenu.backButton
+  # the settings for the back button in the edit menu (positioned at the very left of the bottom row) (will take the user back to the profiles menu)
+  backButton:
+    # editMenu.backButton.enabled | boolean
+    # whether the close button is enabled
+    # default: true
+    enabled: true
+
+    # editMenu.backButton.title | string
+    # the title of the close button
+    # default: "<#FFFFFF>Back to Profiles"
+    title: "<#FFFFFF>Back to Profiles"
+
+    # editMenu.backButton.material | material
+    # the material of the back button
+    # default: PAPER
+    material: PAPER
+
+    # editMenu.backButton.column | int
+    # the column of the back button (columns are 0 indexed, so will be 0-8 rather than 1-9)
+    # default: 0
+    column: 0
+
+    # editMenu.backButton.customModelData
+    # custom model data of the close button
+    # leave as 0 to use the material
+    customModelData: 0
+
+    # editMenu.backButton.lore | list
+    # the lore of the close button
+    # default:
+    # - " "
+    # - "<#FFFFFF><b>Left Click</b> to go back to your profiles."
+    # - " "
+    lore:
+      - " "
+      - "<#FFFFFF><b>Left Click</b> to go back to your profiles."
+      - " "
 
   # editMenu.closeButton
   # the settings for the close button in the edit menu (positioned at the bottom centre of the inventory)
@@ -266,10 +312,15 @@ editMenu:
     # default: "<#FFFFFF>Close"
     title: "<#FFFFFF>Close"
 
-    # editMenu.closeButton.material
+    # editMenu.closeButton.material | material
     # the material of the close button
     # default: BARRIER
     material: BARRIER
+
+    # editMenu.closeButton.column | int
+    # the column of the close button (columns are 0 indexed, so will be 0-8 rather than 1-9)
+    # default: 4
+    column: 4
 
     # editMenu.closeButton.customModelData
     # custom model data of the close button
@@ -302,10 +353,15 @@ editMenu:
     # default: true
     hideOnFirstPage: true
 
-    # editMenu.previousPageButton.material
+    # editMenu.previousPageButton.material | material
     # the material of the previous page button
     # default: PAPER
     material: PAPER
+
+    # editMenu.previousPageButton.column | int
+    # the column of the previous page button (columns are 0 indexed, so will be 0-8 rather than 1-9)
+    # default: 3
+    column: 3
 
     # editMenu.previousPageButton.customModelData
     # custom model data of the close button
@@ -338,10 +394,15 @@ editMenu:
       # default: true
       hideOnLastPage: true
 
-      # editMenu.nextPageButton.material
+      # editMenu.nextPageButton.material | material
       # the material of the next page button
       # default: PAPER
       material: PAPER
+
+      # editMenu.nextPageButton.column | int
+      # the column of the next page button (columns are 0 indexed, so will be 0-8 rather than 1-9)
+      # default: 5
+      column: 5
 
       # editMenu.nextPageButton.customModelData
       # custom model data of the close button
@@ -374,10 +435,15 @@ editMenu:
     # default: true
     enabled: true
 
-    # editMenu.filterModeButton.material
+    # editMenu.filterModeButton.material | material
     # the material of the filter mode button
     # default: BOOK
     material: BOOK
+
+    # editMenu.filterModeButton.column | int
+    # the column of the filter mode button (columns are 0 indexed, so will be 0-8 rather than 1-9)
+    # default: 2
+    column: 2
 
     # editMenu.filterModeButton.customModelData
     # custom model data of the close button
@@ -401,45 +467,6 @@ editMenu:
       - "<#FFFFFF>Current Mode: <#B9C0EA><filter_mode>"
       - " "
 
-  # editMenu.filterEnabledButton
-  # the settings for the enabling/disabling the filter button (positioned 3 to the right of the close button)
-  filterEnabledButton:
-    # editMenu.filterEnabledButton.title | string
-    # the title of the set active profile button
-    # default: "<#FFFFFF>Toggle Filter Enabled"
-    title: "<#FFFFFF>Toggle Filter Enabled"
-
-    # editMenu.filterEnabledButton.enabled | boolean
-    # whether the filter enabled button is enabled
-    # default: true
-    enabled: true
-
-    # editMenu.filterEnabledButton.material
-    # the material of the filter enabled button
-    # default: DIAMOND
-    material: DIAMOND
-
-    # editMenu.filterEnabledButton.customModelData
-    # custom model data of the filter enabled button
-    # leave as 0 to use the material
-    customModelData: 0
-
-    # editMenu.filterEnabledButton.lore | list
-    # the lore of the set active profile button
-    # placeholders:
-    # - <filter_enabled_oo>: the current state of the filter ("on"/"off")
-    # - <filter_enabled_ed>: the current state of the filter ("enabled"/"disabled")
-    # default:
-    # - " "
-    # - "<#FFFFFF>Click to toggle the filter enabled state."
-    # - "<#FFFFFF>Currently your filter is turned <#B9C0EA><filter_enabled_oo><#FFFFFF>."
-    # - " "
-    lore:
-      - " "
-      - "<#FFFFFF>Click to toggle the filter enabled state."
-      - "<#FFFFFF>Currently your filter is turned <#B9C0EA><filter_enabled_oo><#FFFFFF>."
-      - " "
-
 
 # ---------------- [ PROFILE MENU SETTINGS ] ----------------
 # profileMenu
@@ -453,26 +480,26 @@ profileMenu:
   # default: "Your Profiles"
   title: "Your Profiles"
 
-  # editMenu.editProfileItemTitle | string
+  # profileMenu.editProfileItemTitle | string
   # the title of each profile in the menu
   # placeholders:
   # - <profile_name>: the name of the profile that the edit menu is for
   # default: "<#FFFFFF><profile_name>"
   editProfileItemTitle: "<#FFFFFF><profile_name>"
 
-  # editMenu.editProfileItemTitleActive | string
+  # profileMenu.editProfileItemTitleActive | string
   # the title of the active profile in the menu
   # placeholders:
   # - <profile_name>: the name of the profile that the edit menu is for
   # default: "<#FFFFFF><profile_name>"
   editProfileItemTitleActive: "<#FFFFFF><profile_name> (Active)"
 
-  # editMenu.editProfileItemMaterial | string
+  # profileMenu.editProfileItemMaterial | string
   # the material of each profile item in the menu
   # default: BARREL
   editProfileItemMaterial: BARREL
 
-  # editMenu.editProfileItemLore | list
+  # profileMenu.editProfileItemLore | list
   # the lore of each profile in the menu will be this
   # placeholders:
   # - <profile_name>: the name of the profile that the edit menu is for
@@ -480,55 +507,62 @@ profileMenu:
   #  - " "
   #  - "<#FFFFFF><b>Left Click</b> to edit profile."
   # - "<#FFFFFF><b>Right Click</b> to set as active profile."
+  # - "<#FFFFFF><b>Drop Item</b> to delete profile."
   #  - " "
   editProfileItemLore:
     - " "
     - "<#FFFFFF><b>Left Click</b> to edit profile."
     - "<#FFFFFF><b>Right Click</b> to set as active profile."
+    - "<#FFFFFF><b>Drop Item</b> to delete profile."
     - " "
 
-  # editMenu.shouldActiveProfileShowEnchanted | boolean
+  # profileMenu.shouldActiveProfileShowEnchanted | boolean
   # whether the active profile should show as enchanted in the profile menu
   # default: true
   shouldActiveProfileShowEnchanted: true
 
-  # editMenu.bottomRow
+  # profileMenu.bottomRow
   # the settings for the filler items in the bottom row of the edit menu
   bottomRow:
-    # editMenu.bottomRow.material | string
+    # profileMenu.bottomRow.material | material | string
     # the material of the filler items in the bottom row
     # default: BLACK_STAINED_GLASS_PANE
     material: BLACK_STAINED_GLASS_PANE
 
-    # editMenu.bottomRow.customModelData | int
+    # profileMenu.bottomRow.customModelData | int
     # custom model data of the filler items in the bottom row
     # leave as 0 to use the material, if this is not 0, the material will be ignored
     customModelData: 0
 
-  # editMenu.closeButton
+  # profileMenu.closeButton
   # the settings for the close button in the edit menu (positioned at the bottom centre of the inventory)
   closeButton:
-    # editMenu.closeButton.enabled | boolean
+    # profileMenu.closeButton.enabled | boolean
     # whether the close button is enabled
     # default: true
     enabled: true
 
-    # editMenu.closeButton.title | string
+    # profileMenu.closeButton.title | string
     # the title of the close button
     # default: "<#FFFFFF>Close"
     title: "<#FFFFFF>Close"
 
-    # editMenu.closeButton.material
+    # profileMenu.closeButton.material | material
     # the material of the close button
     # default: BARRIER
     material: BARRIER
 
-    # editMenu.closeButton.customModelData
+    # profileMenu.closeButton.column | int
+    # the column of the close button (columns are 0 indexed, so will be 0-8 rather than 1-9)
+    # default: 4
+    column: 4
+
+    # profileMenu.closeButton.customModelData
     # custom model data of the close button
     # leave as 0 to use the material
     customModelData: 0
 
-    # editMenu.closeButton.lore | list
+    # profileMenu.closeButton.lore | list
     # the lore of the close button
     # default:
     # - " "
@@ -539,31 +573,36 @@ profileMenu:
       - "<#FFFFFF><b>Left Click</b> to close the menu."
       - " "
 
-  # editMenu.previousPageButton
+  # profileMenu.previousPageButton
   # the settings for the previous page button in the edit menu (positioned to the left of the close button)
   previousPageButton:
-    # editMenu.previousPageButton.title | string
-    # the title of the close button
-    # default: "<#FFFFFF>Close"
+    # profileMenu.previousPageButton.title | string
+    # the title of the previous page button
+    # default: "<#FFFFFF>Previous Page"
     title: "<#FFFFFF>Previous Page"
 
-    # editMenu.previousPageButton.hideOnFirstPage | boolean
+    # profileMenu.previousPageButton.hideOnFirstPage | boolean
     # whether the previous page button should be hidden when the user is on the first page
     # default: true
     hideOnFirstPage: true
 
-    # editMenu.previousPageButton.material
+    # profileMenu.previousPageButton.material | material
     # the material of the previous page button
     # default: PAPER
     material: PAPER
 
-    # editMenu.previousPageButton.customModelData
-    # custom model data of the close button
+    # profileMenu.previousPageButton.column | int
+    # the column of the previous page button (columns are 0 indexed, so will be 0-8 rather than 1-9)
+    # default: 3
+    column: 3
+
+    # profileMenu.previousPageButton.customModelData
+    # custom model data of the previous page button
     # leave as 0 to use the material
     customModelData: 0
 
-    # editMenu.previousPageButton.lore | list
-    # the lore of the close button
+    # profileMenu.previousPageButton.lore | list
+    # the lore of the previous page button
     # default:
     # - " "
     # - "<#FFFFFF>Go to the <#B9C0EA>previous<#FFFFFF> page."
@@ -573,31 +612,36 @@ profileMenu:
       - "<#FFFFFF>Go to the <#B9C0EA>previous<#FFFFFF> page."
       - " "
 
-  # editMenu.nextPageButton
-  # the settings for the previous page button in the edit menu (positioned to the right of the close button)
+  # profileMenu.nextPageButton
+  # the settings for the next page button in the edit menu (positioned to the right of the close button)
   nextPageButton:
-    # editMenu.nextPageButton.title | string
-    # the title of the close button
-    # default: "<#FFFFFF>Close"
+    # profileMenu.nextPageButton.title | string
+    # the title of the next page button
+    # default: "<#FFFFFF>Next Page"
     title: "<#FFFFFF>Next Page"
 
-    # editMenu.nextPageButton.hideOnLastPage | boolean
+    # profileMenu.nextPageButton.hideOnLastPage | boolean
     # whether the next page button should be hidden when the user is on the last page
     # default: true
     hideOnLastPage: true
 
-    # editMenu.nextPageButton.material
+    # profileMenu.nextPageButton.material | material
     # the material of the next page button
     # default: PAPER
     material: PAPER
 
-    # editMenu.nextPageButton.customModelData
-    # custom model data of the close button
+    # profileMenu.nextPageButton.column | int
+    # the column of the next page button (columns are 0 indexed, so will be 0-8 rather than 1-9)
+    # default: 5
+    column: 5
+
+    # profileMenu.nextPageButton.customModelData
+    # custom model data of the next page button
     # leave as 0 to use the material
     customModelData: 0
 
-    # editMenu.nextPageButton.lore | list
-    # the lore of the close button
+    # profileMenu.nextPageButton.lore | list
+    # the lore of the next page button
     # default:
     # - " "
     # - "<#FFFFFF>Go to the <#B9C0EA>next<#FFFFFF> page."
@@ -605,4 +649,87 @@ profileMenu:
     lore:
       - " "
       - "<#FFFFFF>Go to the <#B9C0EA>next<#FFFFFF> page."
+      - " "
+
+  # profileMenu.createProfileButton
+  # the settings for the create profile button (will close the menu & prompt the user in chat before re-opening the menu)
+  createProfileButton:
+    # profileMenu.createProfileButton.title | string
+    # the title of the create profile button
+    # default: "<#FFFFFF>Create New Profile"
+    title: "<#FFFFFF>Create New Profile"
+
+    # profileMenu.createProfileButton.enabled | boolean
+    # whether the create profile button is enabled
+    # default: true
+    enabled: true
+
+    # profileMenu.createProfileButton.material | material
+    # the material of the create profile button
+    # default: ARMOR_STAND
+    material: ARMOR_STAND
+
+    # profileMenu.createProfileButton.column | int
+    # the column of the create profile button (columns are 0 indexed, so will be 0-8 rather than 1-9)
+    # default: 7
+    column: 7
+
+    # profileMenu.createProfileButton.customModelData
+    # custom model data of the create profile button
+    # leave as 0 to use the material
+    customModelData: 0
+
+    # profileMenu.createProfileButton.lore | list
+    # the lore of the create profile button
+    # default:
+    # - " "
+    # - "<#FFFFFF>Click to create a new profile."
+    # - " "
+    lore:
+      - " "
+      - "<#FFFFFF>Click to create a new profile."
+      - " "
+
+  # profileMenu.filterEnabledButton
+  # the settings for the enabling/disabling the filter button
+  filterEnabledButton:
+    # profileMenu.filterEnabledButton.title | string
+    # the title of the set active profile button
+    # default: "<#FFFFFF>Toggle Filter On/Off"
+    title: "<#FFFFFF>Toggle Filter On/Off"
+
+    # profileMenu.filterEnabledButton.enabled | boolean
+    # whether the filter enabled button is enabled
+    # default: true
+    enabled: true
+
+    # profileMenu.filterEnabledButton.material | material
+    # the material of the filter enabled button
+    # default: DIAMOND
+    material: DIAMOND
+
+    # profileMenu.filterEnabledButton.column | int
+    # the column of the filter enabled button (columns are 0 indexed, so will be 0-8 rather than 1-9)
+    # default: 1
+    column: 1
+
+    # profileMenu.filterEnabledButton.customModelData
+    # custom model data of the filter enabled button
+    # leave as 0 to use the material
+    customModelData: 0
+
+    # profileMenu.filterEnabledButton.lore | list
+    # the lore of the set active profile button
+    # placeholders:
+    # - <filter_enabled_oo>: the current state of the filter ("on"/"off")
+    # - <filter_enabled_ed>: the current state of the filter ("enabled"/"disabled")
+    # default:
+    # - " "
+    # - "<#FFFFFF>Click to toggle the filter enabled state."
+    # - "<#FFFFFF>Currently your filter is turned <#B9C0EA><filter_enabled_oo><#FFFFFF>."
+    # - " "
+    lore:
+      - " "
+      - "<#FFFFFF>Click to toggle the filter enabled state."
+      - "<#FFFFFF>Currently your filter is turned <#B9C0EA><filter_enabled_oo><#FFFFFF>."
       - " "

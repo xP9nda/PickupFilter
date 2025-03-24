@@ -98,7 +98,7 @@ public class ProfileCreateHandler {
         ));
     }
 
-    private int getMaxAllowedProfilesForUser(Player player) {
+    public int getMaxAllowedProfilesForUser(Player player) {
         int maxAllowedProfiles = plugin.getConfigHandler().getMaxAllowedProfiles();
 
         int maxAllowedProfilesForUser = maxAllowedProfiles;

@@ -6,7 +6,9 @@ import cloud.commandframework.annotations.CommandPermission;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import xp9nda.pickupFilter.PickupFilter;
+import xp9nda.pickupFilter.data.data.PickupProfile;
 import xp9nda.pickupFilter.data.data.PickupUser;
 
 import java.util.UUID;
@@ -102,7 +104,9 @@ public class ProfileDeleteHandler {
              }
         } else {
             // if the player is not trying to delete the profile they are currently using then proceed ignoring the confirmation argument
-            UUID profileUUID = userData.getPickupProfile(profileName).getProfileUUID();
+            PickupProfile profile = userData.getPickupProfile(profileName);
+            UUID profileUUID = profile.getProfileUUID();
+
             userData.removePickupProfile(profileUUID);
         }
 

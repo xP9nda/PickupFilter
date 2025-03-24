@@ -10,6 +10,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -86,6 +87,47 @@ public class ItemFilterEditMenu {
             PickupUser finalUserData = userData;
             PickupProfile pickupProfileOfThisMenu = finalUserData.getPickupProfile(profileUUID);
 
+            // back button
+            if (plugin.getConfigHandler().isEditMenuBackButtonEnabled()) {
+                ItemStack backButton = new ItemStack(plugin.getConfigHandler().getEditMenuBackButtonMaterial(), 1);
+                backButton.editMeta(meta -> {
+                    meta.displayName(miniMessage.deserialize(
+                            plugin.getConfigHandler().getEditMenuBackButtonTitle()
+                    ).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE));
+                    meta.lore(
+                            plugin.getConfigHandler().getEditMenuBackButtonLore().stream().map(loreMsg -> miniMessage.deserialize(
+                                    loreMsg,
+                                    Placeholder.unparsed("profile_name", pickupProfileOfThisMenu.getProfileName())
+                            ).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE)).toList()
+                    );
+                });
+
+                if (plugin.getConfigHandler().getEditMenuBackButtonCustomModelData() != 0) {
+                    backButton.editMeta(meta -> {
+                        meta.setCustomModelData(plugin.getConfigHandler().getEditMenuBackButtonCustomModelData());
+                    });
+                }
+
+                inventoryContents.set(5, plugin.getConfigHandler().getEditMenuBackButtonColumnSlot(), ClickableItem.of(
+                        backButton,
+                        e -> {
+                            // construct the menu name
+                            Component menuName = miniMessage.deserialize(
+                                    plugin.getConfigHandler().getProfileMenuTitle()
+                            );
+
+                            String menuNameString = PlainTextComponentSerializer.plainText().serialize(menuName);
+
+                            // open the menu
+                            ItemFilterProfilesMenu itemFilterProfilesMenu = new ItemFilterProfilesMenu(plugin, player.getUniqueId(), menuNameString);
+                            SmartInventory inventory = itemFilterProfilesMenu.buildMenu();
+
+                            player.closeInventory();
+                            inventory.open(player);
+                        }
+                ));
+            }
+
             // set up the buttons that will need to be updated
             // toggle filter mode button
             if (plugin.getConfigHandler().isEditMenuFilterModeButtonEnabled()) {
@@ -104,7 +146,7 @@ public class ItemFilterEditMenu {
                     );
                 });
 
-                inventoryContents.set(5, 1, ClickableItem.of(
+                inventoryContents.set(5, plugin.getConfigHandler().getEditMenuFilterModeButtonColumnSlot(), ClickableItem.of(
                         filterModeItem,
                         e -> {
                             FilterMode filterMode = pickupProfileOfThisMenu.getFilterMode();
@@ -124,50 +166,6 @@ public class ItemFilterEditMenu {
                                     Placeholder.unparsed("profile_state", pickupProfileOfThisMenu.getFilterMode().toString().toLowerCase()),
                                     Placeholder.unparsed("profile_name", pickupProfileOfThisMenu.getProfileName())
                             ).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE));
-
-                            // Refresh the inventory
-                            init(player, inventoryContents);
-                        }
-                ));
-            }
-
-            // toggle filter enabled/disabled button
-            if (plugin.getConfigHandler().isEditMenuFilterEnabledButtonEnabled()) {
-                ItemStack filterEnabledItem = new ItemStack(plugin.getConfigHandler().getEditMenuFilterEnabledButtonMaterial(), 1);
-
-                filterEnabledItem.editMeta(meta -> {
-                    meta.displayName(miniMessage.deserialize(
-                            plugin.getConfigHandler().getEditMenuFilterEnabledButtonName()
-                    ).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE));
-                    meta.lore(
-                            plugin.getConfigHandler().getEditMenuFilterEnabledButtonLore().stream().map(loreMsg -> miniMessage.deserialize(
-                                    loreMsg,
-                                    Placeholder.unparsed("filter_enabled_oo", finalUserData.isPickupEnabled() ? "on" : "off"),
-                                    Placeholder.unparsed("filter_enabled_ed", finalUserData.isPickupEnabled() ? "enabled" : "disabled")
-                            ).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE)).toList()
-                    );
-                });
-
-                if (plugin.getConfigHandler().getEditMenuFilterEnabledButtonCustomModelData() != 0) {
-                    filterEnabledItem.editMeta(meta -> {
-                        meta.setCustomModelData(plugin.getConfigHandler().getEditMenuFilterEnabledButtonCustomModelData());
-                    });
-                }
-
-                inventoryContents.set(5, 7, ClickableItem.of(
-                        filterEnabledItem,
-                        e -> {
-                            finalUserData.setPickupEnabled(!finalUserData.isPickupEnabled());
-
-                            // send the player a message that the filter has been turned on/off
-                            player.sendMessage(miniMessage.deserialize(
-                                    plugin.getConfigHandler().getItemFilterToggledMessage(),
-                                    Placeholder.unparsed("new_enabled_state", finalUserData.isPickupEnabled() ? "enabled" : "disabled"),
-                                    Placeholder.unparsed("new_enabled_state_bool", finalUserData.isPickupEnabled() ? "true" : "false"),
-                                    Placeholder.unparsed("old_enabled_state", finalUserData.isPickupEnabled() ? "disabled" : "enabled"),
-                                    Placeholder.unparsed("old_enabled_state_bool", finalUserData.isPickupEnabled() ? "false" : "true")
-                            ).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE));
-
 
                             // Refresh the inventory
                             init(player, inventoryContents);
@@ -272,7 +270,7 @@ public class ItemFilterEditMenu {
                     });
                 }
 
-                inventoryContents.set(5, 4, ClickableItem.of(
+                inventoryContents.set(5, plugin.getConfigHandler().getEditMenuCloseButtonColumnSlot(), ClickableItem.of(
                         closeButtonItem,
                         e -> player.closeInventory()
                 ));
@@ -301,7 +299,7 @@ public class ItemFilterEditMenu {
                     });
                 }
 
-                inventoryContents.set(5, 3, ClickableItem.of(
+                inventoryContents.set(5, plugin.getConfigHandler().getPreviousPageButtonColumnSlot(), ClickableItem.of(
                         previousPageItem,
                         e -> buildMenu().open(player, pagination.previous().getPage())
                 ));
@@ -329,7 +327,7 @@ public class ItemFilterEditMenu {
                     });
                 }
 
-                inventoryContents.set(5, 5, ClickableItem.of(
+                inventoryContents.set(5, plugin.getConfigHandler().getNextPageButtonColumnSlot(), ClickableItem.of(
                         nextPageItem,
                         e -> buildMenu().open(player, pagination.next().getPage())
                 ));

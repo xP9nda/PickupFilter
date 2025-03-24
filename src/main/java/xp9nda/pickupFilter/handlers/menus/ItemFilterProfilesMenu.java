@@ -9,9 +9,11 @@ import fr.minuskube.inv.content.SlotIterator;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import xp9nda.pickupFilter.PickupFilter;
 import xp9nda.pickupFilter.data.data.PickupProfile;
@@ -133,6 +135,36 @@ public class ItemFilterProfilesMenu {
                         profileItem,
                         e -> {
 
+                            if (e.getClick() == ClickType.DROP) {
+                                // if the player is trying to delete the profile they are currently using
+                                if (activeProfileUUID != null) {
+                                    if (activeProfileUUID.equals(profile.getProfileUUID())) {
+                                        // set the player's active profile to null
+                                        user.setActiveProfileUUID(null);
+
+                                        // stop tracking the profile
+                                        plugin.getDataHolder().clearPlayerActiveProfileItems(player.getUniqueId());
+
+                                        // tell the user they no longer have an active profile
+                                        player.sendMessage(miniMessage.deserialize(
+                                                plugin.getConfigHandler().getNoLongerHaveActiveProfileMessage()
+                                        ));
+                                    }
+                                }
+
+                                // send a success message to the player
+                                player.sendMessage(miniMessage.deserialize(
+                                        plugin.getConfigHandler().getProfileDeletedSuccessMessage(),
+                                        Placeholder.unparsed("profile_name", profile.getProfileName())
+                                ));
+
+                                user.removePickupProfile(profile.getProfileUUID());
+
+                                // refresh the inventory
+                                refreshItems(player, inventoryContents);
+                            }
+
+
                             // if it is a left click, open the edit menu
                             if (e.isLeftClick()) {
                                 // construct the menu name
@@ -219,7 +251,7 @@ public class ItemFilterProfilesMenu {
                     });
                 }
 
-                inventoryContents.set(1, 4, ClickableItem.of(
+                inventoryContents.set(1, plugin.getConfigHandler().getProfileMenuCloseButtonColumnSlot(), ClickableItem.of(
                         closeButtonItem,
                         e -> player.closeInventory()
                 ));
@@ -247,7 +279,7 @@ public class ItemFilterProfilesMenu {
                     });
                 }
 
-                inventoryContents.set(1, 3, ClickableItem.of(
+                inventoryContents.set(1, plugin.getConfigHandler().getProfileMenuPreviousPageButtonColumnSlot(), ClickableItem.of(
                         previousPageItem,
                         e -> buildMenu().open(player, pagination.previous().getPage())
                 ));
@@ -274,11 +306,56 @@ public class ItemFilterProfilesMenu {
                     });
                 }
 
-                inventoryContents.set(1, 5, ClickableItem.of(
+                inventoryContents.set(1, plugin.getConfigHandler().getProfileMenuNextPageButtonColumnSlot(), ClickableItem.of(
                         nextPageItem,
                         e -> buildMenu().open(player, pagination.next().getPage())
                 ));
             }
+
+            // toggle filter enabled/disabled button
+            if (plugin.getConfigHandler().isEditMenuFilterEnabledButtonEnabled()) {
+                ItemStack filterEnabledItem = new ItemStack(plugin.getConfigHandler().getEditMenuFilterEnabledButtonMaterial(), 1);
+
+                filterEnabledItem.editMeta(meta -> {
+                    meta.displayName(miniMessage.deserialize(
+                            plugin.getConfigHandler().getEditMenuFilterEnabledButtonName()
+                    ).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE));
+                    meta.lore(
+                            plugin.getConfigHandler().getEditMenuFilterEnabledButtonLore().stream().map(loreMsg -> miniMessage.deserialize(
+                                    loreMsg,
+                                    Placeholder.unparsed("filter_enabled_oo", user.isPickupEnabled() ? "on" : "off"),
+                                    Placeholder.unparsed("filter_enabled_ed", user.isPickupEnabled() ? "enabled" : "disabled")
+                            ).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE)).toList()
+                    );
+                });
+
+                if (plugin.getConfigHandler().getEditMenuFilterEnabledButtonCustomModelData() != 0) {
+                    filterEnabledItem.editMeta(meta -> {
+                        meta.setCustomModelData(plugin.getConfigHandler().getEditMenuFilterEnabledButtonCustomModelData());
+                    });
+                }
+
+                inventoryContents.set(1, plugin.getConfigHandler().getEditMenuFilterEnabledButtonColumnSlot(), ClickableItem.of(
+                        filterEnabledItem,
+                        e -> {
+                            user.setPickupEnabled(!user.isPickupEnabled());
+
+                            // send the player a message that the filter has been turned on/off
+                            player.sendMessage(miniMessage.deserialize(
+                                    plugin.getConfigHandler().getItemFilterToggledMessage(),
+                                    Placeholder.unparsed("new_enabled_state", user.isPickupEnabled() ? "enabled" : "disabled"),
+                                    Placeholder.unparsed("new_enabled_state_bool", user.isPickupEnabled() ? "true" : "false"),
+                                    Placeholder.unparsed("old_enabled_state", user.isPickupEnabled() ? "disabled" : "enabled"),
+                                    Placeholder.unparsed("old_enabled_state_bool", user.isPickupEnabled() ? "false" : "true")
+                            ).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE));
+
+                            // Refresh the inventory
+                            init(player, inventoryContents);
+                        }
+                ));
+            }
+
+            setupNewProfileButton(user, player, inventoryContents);
 
             // fill the rest of the bottom row with filler items (black stained glass pane)
             Integer customModelDataForFillerItem = plugin.getConfigHandler().getProfileMenuBottomRowCustomModelData();
@@ -299,6 +376,53 @@ public class ItemFilterProfilesMenu {
                 }
 
                 inventoryContents.set(1, i, ClickableItem.empty(fillerItem));
+            }
+        }
+
+        private void setupNewProfileButton(PickupUser user, Player player, InventoryContents inventoryContents) {
+            if (plugin.getConfigHandler().isProfileMenuCreateNewProfileButtonEnabled()) {
+                // check if the user is allowed to create a new profile
+                int maxAllowedProfilesForUser = plugin.getProfileCreateHandler().getMaxAllowedProfilesForUser(player);
+                int numberOfProfiles = user.getPickupProfiles().size();
+
+                if (numberOfProfiles >= maxAllowedProfilesForUser) {
+                    return;
+                }
+
+                ItemStack createNewProfileItem = new ItemStack(plugin.getConfigHandler().getProfileMenuCreateNewProfileButtonMaterial(), 1);
+
+                createNewProfileItem.editMeta(meta -> {
+                    meta.displayName(miniMessage.deserialize(
+                            plugin.getConfigHandler().getProfileMenuCreateNewProfileButtonTitle()
+                    ).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE));
+                    meta.lore(
+                            plugin.getConfigHandler().getProfileMenuCreateNewProfileButtonLore().stream().map(loreMsg -> miniMessage.deserialize(
+                                    loreMsg
+                            ).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE)).toList()
+                    );
+                });
+
+                if (plugin.getConfigHandler().getProfileMenuCreateNewProfileButtonCustomModelData() != 0) {
+                    createNewProfileItem.editMeta(meta -> {
+                        meta.setCustomModelData(plugin.getConfigHandler().getProfileMenuCreateNewProfileButtonCustomModelData());
+                    });
+                }
+
+                inventoryContents.set(1, plugin.getConfigHandler().getProfileMenuCreateNewProfileButtonColumnSlot(), ClickableItem.of(
+                        createNewProfileItem,
+                        e -> {
+                            // register that the player has entered the profile creation state
+                            plugin.getProfileCreationButtonChatHandler().addPlayerToProfileCreation(player.getUniqueId());
+
+                            // send the player a message that they are now in the profile creation state
+                            player.sendMessage(miniMessage.deserialize(
+                                    plugin.getConfigHandler().getNewProfileEnterNameInChatMessage()
+                            ).decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE));
+
+                            // close the inventory
+                            player.closeInventory();
+                        }
+                ));
             }
         }
     }

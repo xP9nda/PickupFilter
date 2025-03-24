@@ -42,6 +42,7 @@ public class ConfigHandler {
     private String profileItemAddedToFilterMessage;
     private String profileItemRemovedFromFilterMessage;
     private String profileItemNotInFilterMessage;
+    private String newProfileEnterNameInChatMessage;
 
     private String itemFilterToggledMessage;
     private String profileUseMessage;
@@ -52,30 +53,35 @@ public class ConfigHandler {
     private Material editMenuCloseButtonMaterial;
     private String editMenuCloseButtonName;
     private List<String> editMenuCloseButtonLore;
+    private int editMenuCloseButtonColumnSlot;
 
     private boolean previousPageButtonHideOnFirstPage;
     private Integer previousPageButtonCustomModelData;
     private Material previousPageButtonMaterial;
     private String previousPageButtonName;
     private List<String> previousPageButtonLore;
+    private int previousPageButtonColumnSlot;
 
     private boolean nextPageButtonHideOnLastPage;
     private Integer nextPageButtonCustomModelData;
     private Material nextPageButtonMaterial;
     private String nextPageButtonName;
     private List<String> nextPageButtonLore;
+    private int nextPageButtonColumnSlot;
 
     private boolean editMenuFilterModeButtonEnabled;
     private boolean editMenuFilterModeButtonCustomModelData;
     private Material editMenuFilterModeButtonMaterial;
     private String editMenuFilterModeButtonName;
     private List<String> editMenuFilterModeButtonLore;
+    private int editMenuFilterModeButtonColumnSlot;
 
     private boolean editMenuFilterEnabledButtonEnabled;
     private Integer editMenuFilterEnabledButtonCustomModelData;
     private Material editMenuFilterEnabledButtonMaterial;
     private String editMenuFilterEnabledButtonName;
     private List<String> editMenuFilterEnabledButtonLore;
+    private int editMenuFilterEnabledButtonColumnSlot;
 
     private List<String> editMenuRemoveFromProfileItemLore;
 
@@ -103,18 +109,35 @@ public class ConfigHandler {
     private List<String> profileMenuCloseButtonLore;
     private Material profileMenuCloseButtonMaterial;
     private Integer profileMenuCloseButtonCustomModelData;
+    private int profileMenuCloseButtonColumnSlot;
 
     private boolean profileMenuPreviousPageButtonHideOnFirstPage;
     private String profileMenuPreviousPageButtonTitle;
     private List<String> profileMenuPreviousPageButtonLore;
     private Material profileMenuPreviousPageButtonMaterial;
     private Integer profileMenuPreviousPageButtonCustomModelData;
+    private int profileMenuPreviousPageButtonColumnSlot;
 
     private boolean profileMenuNextPageButtonHideOnLastPage;
     private String profileMenuNextPageButtonTitle;
     private List<String> profileMenuNextPageButtonLore;
     private Material profileMenuNextPageButtonMaterial;
     private Integer profileMenuNextPageButtonCustomModelData;
+    private int profileMenuNextPageButtonColumnSlot;
+
+    private boolean editMenuBackButtonEnabled;
+    private String editMenuBackButtonTitle;
+    private List<String> editMenuBackButtonLore;
+    private Material editMenuBackButtonMaterial;
+    private Integer editMenuBackButtonCustomModelData;
+    private int editMenuBackButtonColumnSlot;
+
+    private boolean profileMenuCreateNewProfileButtonEnabled;
+    private String profileMenuCreateNewProfileButtonTitle;
+    private List<String> profileMenuCreateNewProfileButtonLore;
+    private Material profileMenuCreateNewProfileButtonMaterial;
+    private Integer profileMenuCreateNewProfileButtonCustomModelData;
+    private int profileMenuCreateNewProfileButtonColumnSlot;
 
     // endregion
 
@@ -160,6 +183,7 @@ public class ConfigHandler {
         setProfileItemAddedToFilterMessage(config.getString("messages.profileItemAddedToFilter"));
         setProfileItemRemovedFromFilterMessage(config.getString("messages.profileItemRemovedFromFilter"));
         setProfileItemNotInFilterMessage(config.getString("messages.profileItemNotInFilter"));
+        setNewProfileEnterNameInChatMessage(config.getString("messages.newProfileEnterNameInChat"));
 
         setEditMenuName(config.getString("editMenu.title"));
         setEditMenuCloseButtonEnabled(config.getBoolean("editMenu.closeButton.enabled"));
@@ -196,11 +220,17 @@ public class ConfigHandler {
         setEditMenuBottomRowFillerMaterial(Material.valueOf(config.getString("editMenu.bottomRow.material")));
         setEditMenuBottomRowFillerCustomModelData(config.getInt("editMenu.bottomRow.customModelData"));
 
-        setEditMenuFilterEnabledButtonEnabled(config.getBoolean("editMenu.filterEnabledButton.enabled"));
-        setEditMenuFilterEnabledButtonCustomModelData(config.getInt("editMenu.filterEnabledButton.customModelData"));
-        setEditMenuFilterEnabledButtonMaterial(Material.valueOf(config.getString("editMenu.filterEnabledButton.material")));
-        setEditMenuFilterEnabledButtonName(config.getString("editMenu.filterEnabledButton.title"));
-        setEditMenuFilterEnabledButtonLore(config.getStringList("editMenu.filterEnabledButton.lore"));
+        setEditMenuFilterEnabledButtonEnabled(config.getBoolean("profileMenu.filterEnabledButton.enabled"));
+        setEditMenuFilterEnabledButtonCustomModelData(config.getInt("profileMenu.filterEnabledButton.customModelData"));
+        setEditMenuFilterEnabledButtonMaterial(Material.valueOf(config.getString("profileMenu.filterEnabledButton.material")));
+        setEditMenuFilterEnabledButtonName(config.getString("profileMenu.filterEnabledButton.title"));
+        setEditMenuFilterEnabledButtonLore(config.getStringList("profileMenu.filterEnabledButton.lore"));
+
+        setEditMenuBackButtonEnabled(config.getBoolean("editMenu.backButton.enabled"));
+        setEditMenuBackButtonCustomModelData(config.getInt("editMenu.backButton.customModelData"));
+        setEditMenuBackButtonMaterial(Material.valueOf(config.getString("editMenu.backButton.material")));
+        setEditMenuBackButtonTitle(config.getString("editMenu.backButton.title"));
+        setEditMenuBackButtonLore(config.getStringList("editMenu.backButton.lore"));
 
         setProfileMenuTitle(config.getString("profileMenu.title"));
         setProfileMenuItemMaterial(Material.valueOf(config.getString("profileMenu.editProfileItemMaterial")));
@@ -230,6 +260,23 @@ public class ConfigHandler {
 
         setShouldActiveProfileShowEnchanted(config.getBoolean("profileMenu.shouldActiveProfileShowEnchanted"));
         setProfileMenuItemTitleActiveProfile(config.getString("profileMenu.editProfileItemTitleActive"));
+
+        setNextPageButtonColumnSlot(config.getInt("editMenu.nextPageButton.column"));
+        setPreviousPageButtonColumnSlot(config.getInt("editMenu.previousPageButton.column"));
+        setEditMenuCloseButtonColumnSlot(config.getInt("editMenu.closeButton.column"));
+        setEditMenuFilterModeButtonColumnSlot(config.getInt("editMenu.filterModeButton.column"));
+        setEditMenuFilterEnabledButtonColumnSlot(config.getInt("profileMenu.filterEnabledButton.column"));
+        setEditMenuBackButtonColumnSlot(config.getInt("editMenu.backButton.column"));
+        setProfileMenuCloseButtonColumnSlot(config.getInt("profileMenu.closeButton.column"));
+        setProfileMenuPreviousPageButtonColumnSlot(config.getInt("profileMenu.previousPageButton.column"));
+        setProfileMenuNextPageButtonColumnSlot(config.getInt("profileMenu.nextPageButton.column"));
+
+        setProfileMenuCreateNewProfileButtonEnabled(config.getBoolean("profileMenu.createProfileButton.enabled"));
+        setProfileMenuCreateNewProfileButtonTitle(config.getString("profileMenu.createProfileButton.title"));
+        setProfileMenuCreateNewProfileButtonLore(config.getStringList("profileMenu.createProfileButton.lore"));
+        setProfileMenuCreateNewProfileButtonMaterial(Material.valueOf(config.getString("profileMenu.createProfileButton.material")));
+        setProfileMenuCreateNewProfileButtonCustomModelData(config.getInt("profileMenu.createProfileButton.customModelData"));
+        setProfileMenuCreateNewProfileButtonColumnSlot(config.getInt("profileMenu.createProfileButton.column"));
     }
 
 
@@ -892,5 +939,173 @@ public class ConfigHandler {
 
     public void setProfileMenuItemTitleActiveProfile(String profileMenuItemTitleActiveProfile) {
         this.profileMenuItemTitleActiveProfile = profileMenuItemTitleActiveProfile;
+    }
+
+    public boolean isEditMenuBackButtonEnabled() {
+        return editMenuBackButtonEnabled;
+    }
+
+    public void setEditMenuBackButtonEnabled(boolean editMenuBackButtonEnabled) {
+        this.editMenuBackButtonEnabled = editMenuBackButtonEnabled;
+    }
+
+    public String getEditMenuBackButtonTitle() {
+        return editMenuBackButtonTitle;
+    }
+
+    public void setEditMenuBackButtonTitle(String editMenuBackButtonTitle) {
+        this.editMenuBackButtonTitle = editMenuBackButtonTitle;
+    }
+
+    public List<String> getEditMenuBackButtonLore() {
+        return editMenuBackButtonLore;
+    }
+
+    public void setEditMenuBackButtonLore(List<String> editMenuBackButtonLore) {
+        this.editMenuBackButtonLore = editMenuBackButtonLore;
+    }
+
+    public Material getEditMenuBackButtonMaterial() {
+        return editMenuBackButtonMaterial;
+    }
+
+    public void setEditMenuBackButtonMaterial(Material editMenuBackButtonMaterial) {
+        this.editMenuBackButtonMaterial = editMenuBackButtonMaterial;
+    }
+
+    public Integer getEditMenuBackButtonCustomModelData() {
+        return editMenuBackButtonCustomModelData;
+    }
+
+    public void setEditMenuBackButtonCustomModelData(Integer editMenuBackButtonCustomModelData) {
+        this.editMenuBackButtonCustomModelData = editMenuBackButtonCustomModelData;
+    }
+
+    public int getEditMenuCloseButtonColumnSlot() {
+        return editMenuCloseButtonColumnSlot;
+    }
+
+    public void setEditMenuCloseButtonColumnSlot(int editMenuCloseButtonColumnSlot) {
+        this.editMenuCloseButtonColumnSlot = editMenuCloseButtonColumnSlot;
+    }
+
+    public int getPreviousPageButtonColumnSlot() {
+        return previousPageButtonColumnSlot;
+    }
+
+    public void setPreviousPageButtonColumnSlot(int previousPageButtonColumnSlot) {
+        this.previousPageButtonColumnSlot = previousPageButtonColumnSlot;
+    }
+
+    public int getNextPageButtonColumnSlot() {
+        return nextPageButtonColumnSlot;
+    }
+
+    public void setNextPageButtonColumnSlot(int nextPageButtonColumnSlot) {
+        this.nextPageButtonColumnSlot = nextPageButtonColumnSlot;
+    }
+
+    public int getEditMenuFilterModeButtonColumnSlot() {
+        return editMenuFilterModeButtonColumnSlot;
+    }
+
+    public void setEditMenuFilterModeButtonColumnSlot(int editMenuFilterModeButtonColumnSlot) {
+        this.editMenuFilterModeButtonColumnSlot = editMenuFilterModeButtonColumnSlot;
+    }
+
+    public int getEditMenuFilterEnabledButtonColumnSlot() {
+        return editMenuFilterEnabledButtonColumnSlot;
+    }
+
+    public void setEditMenuFilterEnabledButtonColumnSlot(int editMenuFilterEnabledButtonColumnSlot) {
+        this.editMenuFilterEnabledButtonColumnSlot = editMenuFilterEnabledButtonColumnSlot;
+    }
+
+    public int getProfileMenuCloseButtonColumnSlot() {
+        return profileMenuCloseButtonColumnSlot;
+    }
+
+    public void setProfileMenuCloseButtonColumnSlot(int profileMenuCloseButtonColumnSlot) {
+        this.profileMenuCloseButtonColumnSlot = profileMenuCloseButtonColumnSlot;
+    }
+
+    public int getProfileMenuPreviousPageButtonColumnSlot() {
+        return profileMenuPreviousPageButtonColumnSlot;
+    }
+
+    public void setProfileMenuPreviousPageButtonColumnSlot(int profileMenuPreviousPageButtonColumnSlot) {
+        this.profileMenuPreviousPageButtonColumnSlot = profileMenuPreviousPageButtonColumnSlot;
+    }
+
+    public int getEditMenuBackButtonColumnSlot() {
+        return editMenuBackButtonColumnSlot;
+    }
+
+    public void setEditMenuBackButtonColumnSlot(int editMenuBackButtonColumnSlot) {
+        this.editMenuBackButtonColumnSlot = editMenuBackButtonColumnSlot;
+    }
+
+    public int getProfileMenuNextPageButtonColumnSlot() {
+        return profileMenuNextPageButtonColumnSlot;
+    }
+
+    public void setProfileMenuNextPageButtonColumnSlot(int profileMenuNextPageButtonColumnSlot) {
+        this.profileMenuNextPageButtonColumnSlot = profileMenuNextPageButtonColumnSlot;
+    }
+
+    public int getProfileMenuCreateNewProfileButtonColumnSlot() {
+        return profileMenuCreateNewProfileButtonColumnSlot;
+    }
+
+    public void setProfileMenuCreateNewProfileButtonColumnSlot(int profileMenuCreateNewProfileButtonColumnSlot) {
+        this.profileMenuCreateNewProfileButtonColumnSlot = profileMenuCreateNewProfileButtonColumnSlot;
+    }
+
+    public Integer getProfileMenuCreateNewProfileButtonCustomModelData() {
+        return profileMenuCreateNewProfileButtonCustomModelData;
+    }
+
+    public void setProfileMenuCreateNewProfileButtonCustomModelData(Integer profileMenuCreateNewProfileButtonCustomModelData) {
+        this.profileMenuCreateNewProfileButtonCustomModelData = profileMenuCreateNewProfileButtonCustomModelData;
+    }
+
+    public Material getProfileMenuCreateNewProfileButtonMaterial() {
+        return profileMenuCreateNewProfileButtonMaterial;
+    }
+
+    public void setProfileMenuCreateNewProfileButtonMaterial(Material profileMenuCreateNewProfileButtonMaterial) {
+        this.profileMenuCreateNewProfileButtonMaterial = profileMenuCreateNewProfileButtonMaterial;
+    }
+
+    public List<String> getProfileMenuCreateNewProfileButtonLore() {
+        return profileMenuCreateNewProfileButtonLore;
+    }
+
+    public void setProfileMenuCreateNewProfileButtonLore(List<String> profileMenuCreateNewProfileButtonLore) {
+        this.profileMenuCreateNewProfileButtonLore = profileMenuCreateNewProfileButtonLore;
+    }
+
+    public String getProfileMenuCreateNewProfileButtonTitle() {
+        return profileMenuCreateNewProfileButtonTitle;
+    }
+
+    public void setProfileMenuCreateNewProfileButtonTitle(String profileMenuCreateNewProfileButtonTitle) {
+        this.profileMenuCreateNewProfileButtonTitle = profileMenuCreateNewProfileButtonTitle;
+    }
+
+    public boolean isProfileMenuCreateNewProfileButtonEnabled() {
+        return profileMenuCreateNewProfileButtonEnabled;
+    }
+
+    public void setProfileMenuCreateNewProfileButtonEnabled(boolean profileMenuCreateNewProfileButtonEnabled) {
+        this.profileMenuCreateNewProfileButtonEnabled = profileMenuCreateNewProfileButtonEnabled;
+    }
+
+    public String getNewProfileEnterNameInChatMessage() {
+        return newProfileEnterNameInChatMessage;
+    }
+
+    public void setNewProfileEnterNameInChatMessage(String newProfileEnterNameInChatMessage) {
+        this.newProfileEnterNameInChatMessage = newProfileEnterNameInChatMessage;
     }
 }

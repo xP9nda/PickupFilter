@@ -77,6 +77,11 @@ public class PlayerJoinHandler implements Listener {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             plugin.getDataHolder().savePlayerData(playerUUID);
 
+            // check if the user is still inside of the profile creation state list after clicking the button in the profile gui
+            if (plugin.getProfileCreationButtonChatHandler().isPlayerCreatingProfile(playerUUID)) {
+                plugin.getProfileCreationButtonChatHandler().removePlayerFromProfileCreation(playerUUID);
+            }
+
             // before removing player data, we need to remove the information about the player's active profile from the data holder
             UUID activeProfileUUID = plugin.getDataHolder().getPlayerData(playerUUID).getActiveProfileUUID();
 
