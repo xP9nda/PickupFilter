@@ -1,6 +1,7 @@
 package xp9nda.pickupFilter.handlers.implementations;
 
 import com.willfp.eco.core.events.DropQueuePushEvent;
+import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -8,7 +9,9 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import xp9nda.pickupFilter.PickupFilter;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 public class EcoEnchantsImplementation implements Listener {
 
@@ -27,24 +30,27 @@ public class EcoEnchantsImplementation implements Listener {
             Collection<? extends ItemStack> items = event.getItems();
 
             int xpToGive = event.getXp();
-            boolean wasEventCancelled = false;
 
+            Collection<ItemStack> itemsToRemove = new ArrayList<>();
             for (ItemStack item : items) {
                 boolean isPickupAllowed = plugin.getPickupHandler().shouldItemBePickedUp(player, item);
 
-                // if the item should not be picked up, cancel the event and drop the item on the ground
+                // if the item should not be picked up, remove the item from the list of items to reward the player with
                 if (!isPickupAllowed) {
-                    event.setCancelled(true);
-                    wasEventCancelled = true;
+                    itemsToRemove.add(item);
+
                     plugin.getPickupHandler().handleDroppingItem(event.getLocation(), item);
                 }
             }
 
-            // give the player the xp, allowing mending to absorb it
-            if (wasEventCancelled) {
-                if (xpToGive > 0) {
-                    player.giveExp(xpToGive, true);
+            // remove any items that have been queued for removal as they should not be allowed
+            if (!itemsToRemove.isEmpty()) {
+                for (ItemStack itemToRemove : itemsToRemove) {
+                    items.remove(itemToRemove);
                 }
+
+                // update the event items
+                event.setItems(items);
             }
         }
     }
