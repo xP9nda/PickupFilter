@@ -27,6 +27,7 @@ public class EcoEnchantsImplementation implements Listener {
             Collection<? extends ItemStack> items = event.getItems();
 
             int xpToGive = event.getXp();
+            boolean wasEventCancelled = false;
 
             for (ItemStack item : items) {
                 boolean isPickupAllowed = plugin.getPickupHandler().shouldItemBePickedUp(player, item);
@@ -34,13 +35,16 @@ public class EcoEnchantsImplementation implements Listener {
                 // if the item should not be picked up, cancel the event and drop the item on the ground
                 if (!isPickupAllowed) {
                     event.setCancelled(true);
+                    wasEventCancelled = true;
                     plugin.getPickupHandler().handleDroppingItem(event.getLocation(), item);
                 }
             }
 
             // give the player the xp, allowing mending to absorb it
-            if (xpToGive > 0) {
-                player.giveExp(xpToGive, true);
+            if (wasEventCancelled) {
+                if (xpToGive > 0) {
+                    player.giveExp(xpToGive, true);
+                }
             }
         }
     }
