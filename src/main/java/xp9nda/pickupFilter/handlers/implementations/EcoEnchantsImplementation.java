@@ -29,8 +29,6 @@ public class EcoEnchantsImplementation implements Listener {
             Player player = event.getPlayer();
             Collection<? extends ItemStack> items = event.getItems();
 
-            int xpToGive = event.getXp();
-
             Collection<ItemStack> itemsToRemove = new ArrayList<>();
             for (ItemStack item : items) {
                 boolean isPickupAllowed = plugin.getPickupHandler().shouldItemBePickedUp(player, item);
@@ -44,14 +42,23 @@ public class EcoEnchantsImplementation implements Listener {
             }
 
             // remove any items that have been queued for removal as they should not be allowed
+            int xpToGive = event.getXp();
+            boolean hasXpBeenGiven = false;
+
             if (!itemsToRemove.isEmpty()) {
                 for (ItemStack itemToRemove : itemsToRemove) {
                     items.remove(itemToRemove);
+
+                    // manually provide the player with the experience that should have been given
+                    if ((xpToGive > 0) && !hasXpBeenGiven) {
+                        player.giveExp(xpToGive, true);
+                    }
                 }
 
                 // update the event items
                 event.setItems(items);
             }
+
         }
     }
 

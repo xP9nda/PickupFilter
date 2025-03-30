@@ -25,6 +25,7 @@ import xp9nda.pickupFilter.handlers.cmds.filter.FilterModeHandler;
 import xp9nda.pickupFilter.handlers.cmds.filter.FilterRemoveHandler;
 import xp9nda.pickupFilter.handlers.cmds.profile.*;
 import xp9nda.pickupFilter.handlers.implementations.EcoEnchantsImplementation;
+import xp9nda.pickupFilter.handlers.implementations.Metrics;
 import xp9nda.pickupFilter.handlers.menus.ItemFilterEditListener;
 import xp9nda.pickupFilter.handlers.menus.ItemFilterEditMenu;
 import xp9nda.pickupFilter.handlers.suggestions.ProfileSuggestionsProvider;
@@ -60,6 +61,10 @@ public final class PickupFilter extends JavaPlugin {
     public void onEnable() {
         // save the default config
         saveDefaultConfig();
+
+        // bstats setup
+        int pluginId = 25304;
+        Metrics metrics = new Metrics(this, pluginId);
 
         // setup
         PluginManager pluginManager = this.getServer().getPluginManager();

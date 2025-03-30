@@ -1,5 +1,5 @@
 name: PickupFilter
-version: '1.0.2'
+version: '1.0.3'
 main: xp9nda.pickupFilter.PickupFilter
 api-version: '1.21'
 authors: [ xP9nda ]
