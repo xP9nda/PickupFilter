@@ -51,7 +51,6 @@ public class WorldGuardImplementation {
         if (worldGuardPlugin == null) {
             return false;
         }
-        plugin.getSLF4JLogger().info("WorldGuard is enabled.");
 
         // if it exists, get the region container and check if the player is in a region with the flag
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
@@ -60,12 +59,9 @@ public class WorldGuardImplementation {
         if (regions == null) {
             return false;
         }
-        plugin.getSLF4JLogger().info("RegionManager is not null.");
 
         Location playerLocation = player.getLocation();
         ApplicableRegionSet set = regions.getApplicableRegions(BukkitAdapter.asBlockVector(playerLocation));
-        plugin.getSLF4JLogger().info("ApplicableRegionSet is not null. Set Size: " + set.size());
-        plugin.getSLF4JLogger().info("Flag: " + ITEMFILTER_PICKUP_FLAG.getName() + ", State: " + set.testState(null, ITEMFILTER_PICKUP_FLAG));
         return set.testState(null, ITEMFILTER_PICKUP_FLAG);
     }
 
