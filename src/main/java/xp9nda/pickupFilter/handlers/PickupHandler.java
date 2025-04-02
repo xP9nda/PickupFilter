@@ -42,6 +42,11 @@ public class PickupHandler implements Listener {
             return true;
         }
 
+        // if the user is in a region that disallows the filter, then allow pickup
+        if (plugin.getWorldGuardImplementation().isPlayerInNoFilterRegion(player)) {
+            return true;
+        }
+
         // get the active profile
         PickupProfile activeProfile = userData.getPickupProfile(userData.getActiveProfileUUID());
 

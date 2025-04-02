@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "panda"
-version = "1.0.3"
+version = "1.1.0"
 description = "An extensive item filter pickup solution featuring customisable profiles and GUIs."
 
 repositories {
@@ -27,11 +27,16 @@ repositories {
         url = uri("https://repo.auxilor.io/repository/maven-public/")
     }
 
+    maven {
+        url = uri("https://maven.enginehub.org/repo/")
+    }
+
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("com.willfp:eco:6.75.2")
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.13")
 
     implementation("fr.minuskube.inv:smart-invs:1.2.7") {
         exclude(group = "org.spigotmc", module = "spigot-api")
@@ -53,7 +58,7 @@ java {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {
         options.release.set(targetJavaVersion)
     }
 }

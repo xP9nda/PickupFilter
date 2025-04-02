@@ -1,5 +1,5 @@
 name: PickupFilter
-version: '1.0.3'
+version: '1.1.0'
 main: xp9nda.pickupFilter.PickupFilter
 api-version: '1.21'
 authors: [ xP9nda ]
@@ -8,3 +8,6 @@ website: https://github.com/xP9nda
 
 softdepend:
   - EcoEnchants
+
+depend:
+  - WorldGuard

@@ -5,8 +5,14 @@ import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.meta.SimpleCommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
 import com.google.gson.Gson;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import fr.minuskube.inv.InventoryManager;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginEnableEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import xp9nda.pickupFilter.data.DataHolder;
@@ -26,6 +32,7 @@ import xp9nda.pickupFilter.handlers.cmds.filter.FilterRemoveHandler;
 import xp9nda.pickupFilter.handlers.cmds.profile.*;
 import xp9nda.pickupFilter.handlers.implementations.EcoEnchantsImplementation;
 import xp9nda.pickupFilter.handlers.implementations.Metrics;
+import xp9nda.pickupFilter.handlers.implementations.WorldGuardImplementation;
 import xp9nda.pickupFilter.handlers.menus.ItemFilterEditListener;
 import xp9nda.pickupFilter.handlers.menus.ItemFilterEditMenu;
 import xp9nda.pickupFilter.handlers.suggestions.ProfileSuggestionsProvider;
@@ -53,9 +60,12 @@ public final class PickupFilter extends JavaPlugin {
     private ItemFilterEditListener itemFilterEditListener;
     private PickupHandler pickupHandler;
     private EcoEnchantsImplementation ecoEnchantsImplementation;
+    private WorldGuardImplementation worldGuardImplementation;
 
     private ProfileCreationButtonChatHandler profileCreationButtonChatHandler;
     private ProfileCreateHandler profileCreateHandler;
+
+    private WorldGuardPlugin worldGuardPlugin;
 
     @Override
     public void onEnable() {
@@ -115,10 +125,14 @@ public final class PickupFilter extends JavaPlugin {
         ProfileMenuHandler profileMenuHandler = new ProfileMenuHandler(this);
 
         // soft dependencies
-        if (pluginManager.isPluginEnabled("EcoEnchants")) {
+        Plugin ecoEnchants = pluginManager.getPlugin("EcoEnchants");
+
+        if (ecoEnchants != null && ecoEnchants.isEnabled()) {
             ecoEnchantsImplementation = new EcoEnchantsImplementation(this);
             pluginManager.registerEvents(ecoEnchantsImplementation, this);
         }
+
+        worldGuardPlugin = (WorldGuardPlugin) pluginManager.getPlugin("WorldGuard");
 
         // register commands
         try {
@@ -157,6 +171,15 @@ public final class PickupFilter extends JavaPlugin {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void onLoad() {
+        // don't need to check if worldguard is loaded as it is not a soft dependency,
+        // so is guaranteed to be loaded if the plugin is enabled
+        worldGuardImplementation = new WorldGuardImplementation(this);
+        worldGuardImplementation.registerCustomFlags();
+        getSLF4JLogger().info("WorldGuard flags registered");
     }
 
     @Override
@@ -215,5 +238,13 @@ public final class PickupFilter extends JavaPlugin {
 
     public ProfileCreateHandler getProfileCreateHandler() {
         return profileCreateHandler;
+    }
+
+    public WorldGuardImplementation getWorldGuardImplementation() {
+        return worldGuardImplementation;
+    }
+
+    public WorldGuardPlugin getWorldGuardPlugin() {
+        return worldGuardPlugin;
     }
 }
