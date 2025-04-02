@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "panda"
-version = "1.1.0"
+version = "1.1.2"
 description = "An extensive item filter pickup solution featuring customisable profiles and GUIs."
 
 repositories {

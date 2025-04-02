@@ -28,13 +28,13 @@ public class WorldGuardImplementation {
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
         try {
             // create a flag with the name "my-custom-flag", defaulting to true
-            StateFlag flag = new StateFlag("pickup-filter-disabled", true);
+            StateFlag flag = new StateFlag("pickup-filter", true);
             registry.register(flag);
             ITEMFILTER_PICKUP_FLAG = flag; // only set our field if there was no error
         } catch (FlagConflictException e) {
             // some other plugin registered a flag by the same name already.
             // you can use the existing flag, but this may cause conflicts - be sure to check type
-            Flag<?> existing = registry.get("pickup-filter-disabled");
+            Flag<?> existing = registry.get("pickup-filter");
             if (existing instanceof StateFlag) {
                 ITEMFILTER_PICKUP_FLAG = (StateFlag) existing;
             } else {
@@ -62,7 +62,7 @@ public class WorldGuardImplementation {
 
         Location playerLocation = player.getLocation();
         ApplicableRegionSet set = regions.getApplicableRegions(BukkitAdapter.asBlockVector(playerLocation));
-        return set.testState(null, ITEMFILTER_PICKUP_FLAG);
+        return !set.testState(null, ITEMFILTER_PICKUP_FLAG);
     }
 
 }
